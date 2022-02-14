@@ -1,29 +1,20 @@
-version: "3.2"
+#specify the version
+version: "3.8"
+
+#generate the services needed
 services:
 
  redis:
+    container_name: "redis"
     image: "redis:alpine"
-
-    command: redis-server --requirepass P@ssw0rd890
+    
+    #add the custom conf file to use and a custom pw
+    command: redis-server /usr/local/etc/redis/redis.conf --requirepass P@ssw0rd890
 
     ports:
      - "6379:6379"
-
+    
+    #map the volumes to use the custom conf file from this project
     volumes:
-     - $PWD/redis-data:/var/lib/redis
-      - $PWD/redis.conf:/usr/local/etc/redis/redis.conf
+     - $PWD/redis.conf:/usr/local/etc/redis/redis.conf
 
-    environment:
-     - REDIS_REPLICATION_MODE=master
-
-    networks:
-      node_net:
-        ipv4_address: 172.28.1.4
-
-# networking for the Redis container
-networks:
-  node_net:
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.28.0.0/16
